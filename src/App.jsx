@@ -1,12 +1,11 @@
 import { Button } from "@mui/material";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 
 export const App = () => {
   return (
     <>
-      <header>
-        <div className="logo">Logo da Player</div>
-        <h1>Calculando Preço - Lucro Real</h1>
-      </header>
+      <Header />
       <main>
         <form>
           <div>
@@ -24,9 +23,7 @@ export const App = () => {
           <Button variant="contained">Contained</Button>
         </form>
       </main>
-      <footer>
-        <p>Player Contabilidade © 2024 - Todos direitos reservados</p>
-      </footer>
+      <Footer />
     </>
   );
 };
