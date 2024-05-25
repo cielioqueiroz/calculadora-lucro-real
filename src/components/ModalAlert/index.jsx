@@ -20,23 +20,43 @@ const style = {
 };
 
 export const ModalAlert = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [lead, setLead] = useState({
-    name: "",
-    email: "",
+    name: localStorage.getItem("name") || "",
+    email: localStorage.getItem("email") || "",
   });
-  const [nameError, setNameError] = useState(false);
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+  });
 
   useEffect(() => {
-    console.log("Cielio");
+    if (localStorage.getItem("name") && localStorage.getItem("email")) {
+      setOpen(false);
+    }
   }, []);
 
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
+  const validateForm = () => {
+    const newErrors = {
+      name: lead.name === "",
+      email: lead.email === "",
+    };
+    setErrors(newErrors);
+    return !newErrors.name && !newErrors.email;
+  };
 
-  function teste(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
-  }
+    if (validateForm()) {
+      localStorage.setItem("name", lead.name);
+      localStorage.setItem("email", lead.email);
+      setOpen(false);
+    }
+  };
+
+  const handleCancel = () => {
+    window.location.href = "/";
+  };
 
   return (
     <div>
@@ -60,19 +80,9 @@ export const ModalAlert = () => {
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
               Preencha abaixo os dados para acessar a Calculadora.
             </Typography>
-            <Box
-              sx={{
-                marginBottom: "50px",
-              }}
-            >
-              <form onSubmit={teste}>
-                <Box
-                  sx={{
-                    padding: "20px 0",
-                  }}
-                >
-                  
-
+            <Box sx={{ marginBottom: "50px" }}>
+              <form onSubmit={handleSubmit}>
+                <Box sx={{ padding: "20px 0" }}>
                   <TextField
                     id="filled-basic"
                     label="Nome"
@@ -80,16 +90,12 @@ export const ModalAlert = () => {
                     fullWidth
                     name="nome"
                     value={lead.name}
-                    error={nameError}
-                    helperText={nameError ? "Campo obrigatório" : ""} 
+                    error={errors.name}
+                    helperText={errors.name ? "Campo obrigatório" : ""}
                     onChange={(e) => setLead({ ...lead, name: e.target.value })}
                   />
                 </Box>
-                <Box
-                  sx={{
-                    paddingBottom: "20px",
-                  }}
-                >
+                <Box sx={{ paddingBottom: "20px" }}>
                   <TextField
                     id="filled-basic"
                     label="E-mail"
@@ -97,8 +103,11 @@ export const ModalAlert = () => {
                     fullWidth
                     name="email"
                     value={lead.email}
-                    error={nameError}
-                    onChange={(e) => setLead({ ...lead, email: e.target.value })}
+                    error={errors.email}
+                    helperText={errors.email ? "Campo obrigatório" : ""}
+                    onChange={(e) =>
+                      setLead({ ...lead, email: e.target.value })
+                    }
                   />
                 </Box>
                 <Button
@@ -129,6 +138,7 @@ export const ModalAlert = () => {
                   }}
                   variant="contained"
                   disableElevation
+                  onClick={handleCancel}
                 >
                   Cancelar
                 </Button>
@@ -139,10 +149,10 @@ export const ModalAlert = () => {
               id="transition-modal-description"
               sx={{ textAlign: "center", marginTop: "20px" }}
             >
-              Asseguramos que sua privacidade esta segura e que não enviaremos
+              Asseguramos que sua privacidade está segura e que não enviaremos
               mensagens não desejadas,
               <a href="#">
-                <b> leia nossa politica de privacidade.</b>
+                <b> leia nossa política de privacidade.</b>
               </a>
             </Typography>
           </Box>
@@ -151,4 +161,3 @@ export const ModalAlert = () => {
     </div>
   );
 };
-

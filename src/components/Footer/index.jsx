@@ -11,9 +11,8 @@ export const Footer = () => {
   return (
     <AppBar
       sx={{
-        position: "fixed",
+        top: 'auto',
         bottom: 0,
-        width: "100%",
         backgroundColor: "#0D253D",
         textAlign: "center",
       }}

@@ -7,6 +7,7 @@ export const TextGenerator = () => {
         color: "#0D253D",
         fontFamily: "roboto",
         fontWeight: "bold",
+        margin: "50px 0",
       }}
     >
       Torne mais acessível a análise financeira de sua empresa ao simplificar o
