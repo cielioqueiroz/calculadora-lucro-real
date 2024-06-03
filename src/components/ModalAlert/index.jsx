@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, CircularProgress } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -20,7 +20,8 @@ const style = {
 };
 
 export const ModalAlert = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [lead, setLead] = useState({
     name: localStorage.getItem("name") || "",
     email: localStorage.getItem("email") || "",
@@ -31,8 +32,13 @@ export const ModalAlert = () => {
   });
 
   useEffect(() => {
-    if (localStorage.getItem("name") && localStorage.getItem("email")) {
+    const isUserDataStored = localStorage.getItem("name") && localStorage.getItem("email");
+    if (isUserDataStored) {
       setOpen(false);
+      setLoading(false);
+    } else {
+      setOpen(true);
+      setLoading(false);
     }
   }, []);
 
@@ -57,6 +63,14 @@ export const ModalAlert = () => {
   const handleCancel = () => {
     window.location.href = "/";
   };
+
+  if (loading) {
+    return (
+      <Backdrop open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
     <div>

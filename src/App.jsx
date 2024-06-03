@@ -70,10 +70,8 @@ export const App = () => {
       const ipi = precoCompra * (parseFloat(compra.ipi) / 100) || 0;
       const frete = precoCompra * (parseFloat(compra.frete) / 100) || 0;
       const icmsCompra = precoCompra * (parseFloat(compra.icms) / 100) || 0;
-      const reducaoCompra =
-        icmsCompra - icmsCompra * (parseFloat(compra.reducao) / 100) || 0;
-      const pisCofinsCompra =
-        precoCompra * (parseFloat(compra.pisCofins) / 100) || 0;
+      const reducaoCompra = icmsCompra - icmsCompra * (parseFloat(compra.reducao) / 100) || 0;
+      const pisCofinsCompra = precoCompra * (parseFloat(compra.pisCofins) / 100) || 0;
       const retencao = precoCompra * (parseFloat(compra.retencao) / 100) || 0;
 
       const custoCompra =
@@ -85,15 +83,11 @@ export const App = () => {
         retencao -
         reducaoCompra;
 
-      const precoVendaBruta =
-        custoCompra / (1 - parseFloat(venda.margem) / 100) || 0;
-      const precoLiquido =
-        precoVendaBruta * (1 - parseFloat(venda.desconto) / 100) || 0;
+      const precoVendaBruta = custoCompra / (1 - parseFloat(venda.margem) / 100) || 0;
+      const precoLiquido = precoVendaBruta * (1 - parseFloat(venda.desconto) / 100) || 0;
       const icmsVenda = precoVendaBruta * (parseFloat(venda.icms) / 100) || 0;
-      const reducaoVenda =
-        precoVendaBruta * (parseFloat(venda.reducao) / 100) || 0;
-      const simplesVenda =
-        precoLiquido * (parseFloat(venda.simples) / 100) || 0;
+      const reducaoVenda = precoVendaBruta * (parseFloat(venda.reducao) / 100) || 0;
+      const simplesVenda = precoLiquido * (parseFloat(venda.simples) / 100) || 0;
       const pisVenda = precoLiquido * (parseFloat(venda.pis) / 100) || 0;
       const cofinsVenda = precoLiquido * (parseFloat(venda.cofins) / 100) || 0;
       const despesasFixas = precoLiquido * (parseFloat(venda.dFixa) / 100) || 0;
@@ -101,26 +95,22 @@ export const App = () => {
       const margem = precoLiquido * (parseFloat(venda.margem) / 100) || 0;
       const desconto = precoLiquido * (parseFloat(venda.desconto) / 100) || 0;
 
-      const precoVendido =
-        precoVendaBruta * (1 - parseFloat(venda.desconto) / 100) || 0;
+      const precoVendido = precoVendaBruta * (1 - parseFloat(venda.desconto) / 100) || 0;
       const pisCofinsVenda = pisVenda + cofinsVenda || 0;
-      const subtotal =
-        precoVendido - icmsVenda - pisCofinsVenda - reducaoVenda - simplesVenda;
+      const subtotal = precoVendido - icmsVenda - pisCofinsVenda - reducaoVenda - simplesVenda;
       const cmv = custoCompra;
       const lucroContabil = subtotal - cmv;
       const despesas = despesasFixas;
       const lucroBruto = lucroContabil - despesas;
-      const irpj =
-        lucroBruto > 0 ? lucroBruto * (parseFloat(venda.irpj) / 100) : 0;
-      const csll =
-        lucroBruto > 0 ? lucroBruto * (parseFloat(venda.cSocial) / 100) : 0;
+      const irpj = lucroBruto > 0 ? lucroBruto * (parseFloat(venda.irpj) / 100) : 0;
+      const csll = lucroBruto > 0 ? lucroBruto * (parseFloat(venda.cSocial) / 100) : 0;
       const lucroLiquidoReal = lucroBruto - irpj - csll;
       const indiceLucroLiquido = (lucroLiquidoReal / precoLiquido) * 100 || 0;
 
       setResultado({
         custoCompra,
         custoVenda:
-          custoCompra + precoLiquido * (parseFloat(venda.desconto) / 100) || 0,
+        custoCompra + precoLiquido * (parseFloat(venda.desconto) / 100) || 0,
         precoVendaBruta,
         precoLiquido,
         precoVendido,
