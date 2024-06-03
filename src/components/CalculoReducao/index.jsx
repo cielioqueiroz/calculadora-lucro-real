@@ -1,47 +1,59 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
-import { Grid, TextField, Typography, Paper } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { TextField, Grid, Typography } from '@mui/material';
 
-export const CalculoReducao = () => {
-  const [valorProduto, setValorProduto] = useState(0);
-  const [baseCalculo, setBaseCalculo] = useState(0);
+export const CalculoReducao = ({ calculoReducao, setCalculoReducao }) => {
 
-  const calcularReducaoPercentual = () => {
-    return valorProduto !== 0
-      ? ((valorProduto - baseCalculo) / valorProduto) * 100
-      : 0;
+  const handleChange = (e) => {
+    setCalculoReducao({ ...calculoReducao, [e.target.name]: e.target.value });
   };
 
+  const calcularReducao = () => {
+    const valorProduto = parseFloat(calculoReducao.valorProduto) || 0;
+    const baseCalculo = parseFloat(calculoReducao.baseCalculo) || 0;
+    if (valorProduto === 0) {
+      return 0;
+    }
+    return (((valorProduto - baseCalculo) / valorProduto) * 100).toFixed(2);
+  };
+
+  useEffect(() => {
+    setCalculoReducao({ ...calculoReducao, reducao: calcularReducao() });
+  }, [calculoReducao.valorProduto, calculoReducao.baseCalculo]);
+
   return (
-    <Paper style={{ padding: "16px", marginBottom: "16px" }}>
-      <Typography variant="h5" gutterBottom>
-        Cálculo da Redução
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+    <div>
+      <Typography variant="h6">Cálculo da Redução</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
           <TextField
-            label="Valor do Produto"
-            type="number"
+            label="Valor do Produto (R$)"
+            name="valorProduto"
+            value={calculoReducao.valorProduto}
+            onChange={handleChange}
             fullWidth
-            value={valorProduto}
-            onChange={(e) => setValorProduto(parseFloat(e.target.value))}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={6}>
           <TextField
-            label="Base de Cálculo"
-            type="number"
+            label="Base de Cálculo (R$)"
+            name="baseCalculo"
+            value={calculoReducao.baseCalculo}
+            onChange={handleChange}
             fullWidth
-            value={baseCalculo}
-            onChange={(e) => setBaseCalculo(parseFloat(e.target.value))}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Redução Percentual: {calcularReducaoPercentual().toFixed(2)}%
-          </Typography>
+        <Grid item xs={6}>
+          <TextField
+            label="Redução (%)"
+            name="reducao"
+            value={calculoReducao.reducao}
+            fullWidth
+            disabled
+          />
         </Grid>
       </Grid>
-    </Paper>
+    </div>
   );
-};
+}
+
+

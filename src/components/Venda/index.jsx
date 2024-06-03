@@ -1,178 +1,207 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
-import { Grid, TextField, Typography, Paper } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { TextField, Grid, Typography } from '@mui/material';
 
-// eslint-disable-next-line react/prop-types
-export const Venda = ({ precoLiquido }) => {
-  const [percentualIcmsVenda, setPercentualIcmsVenda] = useState(0);
-  const [percentualReducaoVenda, setPercentualReducaoVenda] = useState(0);
-  const [percentualSimples, setPercentualSimples] = useState(0);
-  const [percentualPisVenda, setPercentualPisVenda] = useState(0);
-  const [percentualCofinsVenda, setPercentualCofinsVenda] = useState(0);
-  const [percentualIrpj, setPercentualIrpj] = useState(0);
-  const [percentualCSocial, setPercentualCSocial] = useState(0);
-  const [percentualDespesasFixas, setPercentualDespesasFixas] = useState(0);
-  const [percentualMargem, setPercentualMargem] = useState(0);
-  const [percentualDesconto, setPercentualDesconto] = useState(0);
+export const Venda = ({ venda, setVenda, resultado }) => {
+  const handleChange = (e) => {
+    setVenda({ ...venda, [e.target.name]: e.target.value });
+  };
 
-  const calcularIcmsVenda = () => precoLiquido * (percentualIcmsVenda / 100);
-  const calcularReducaoVenda = () =>
-    precoLiquido * (percentualReducaoVenda / 100);
-  const calcularSimples = () => precoLiquido * (percentualSimples / 100);
-  const calcularPisVenda = () => precoLiquido * (percentualPisVenda / 100);
-  const calcularCofinsVenda = () =>
-    precoLiquido * (percentualCofinsVenda / 100);
-  const calcularDespesasFixas = () =>
-    precoLiquido * (percentualDespesasFixas / 100);
-  const calcularIrpj = (lucroBruto) =>
-    lucroBruto > 0 ? lucroBruto * (percentualIrpj / 100) : 0;
-  const calcularCSocial = (lucroBruto) =>
-    lucroBruto > 0 ? lucroBruto * (percentualCSocial / 100) : 0;
+  const precoLiquido = parseFloat(resultado.precoLiquido) || 0;
+  const calcularValor = (percentual) => (precoLiquido * (parseFloat(percentual) / 100)).toFixed(2);
+
+  useEffect(() => {
+    setVenda((prevVenda) => ({
+      ...prevVenda,
+      valorICMS: calcularValor(prevVenda.icms),
+      valorReducao: calcularValor(prevVenda.reducao),
+      valorSimples: calcularValor(prevVenda.simples),
+      valorPIS: calcularValor(prevVenda.pis),
+      valorCOFINS: calcularValor(prevVenda.cofins),
+      valorIRPJ: calcularValor(prevVenda.irpj),
+      valorCSocial: calcularValor(prevVenda.cSocial),
+      valorDFixa: calcularValor(prevVenda.dFixa),
+      valorMargem: calcularValor(prevVenda.margem),
+      valorDesconto: calcularValor(prevVenda.desconto)
+    }));
+  }, [venda.icms, venda.reducao, venda.simples, venda.pis, venda.cofins, venda.irpj, venda.cSocial, venda.dFixa, venda.margem, venda.desconto, precoLiquido]);
 
   return (
-    <Paper style={{ padding: "16px", marginBottom: "16px" }}>
-      <Typography variant="h5" gutterBottom>
-        Venda
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+    <div>
+      <Typography variant="h6">Venda</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de ICMS (Venda)"
-            type="number"
+            label="ICMS (%)"
+            name="icms"
+            value={venda.icms}
+            onChange={handleChange}
             fullWidth
-            value={percentualIcmsVenda}
-            onChange={(e) => setPercentualIcmsVenda(parseFloat(e.target.value))}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor ICMS (Venda): {calcularIcmsVenda().toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de Redução (Venda)"
-            type="number"
+            label="ICMS (R$)"
+            value={venda.valorICMS || ''}
             fullWidth
-            value={percentualReducaoVenda}
-            onChange={(e) =>
-              setPercentualReducaoVenda(parseFloat(e.target.value))
-            }
+            disabled
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor Redução (Venda): {calcularReducaoVenda().toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de Simples"
-            type="number"
+            label="Redução (%)"
+            name="reducao"
+            value={venda.reducao}
+            onChange={handleChange}
             fullWidth
-            value={percentualSimples}
-            onChange={(e) => setPercentualSimples(parseFloat(e.target.value))}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor Simples: {calcularSimples().toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de PIS (Venda)"
-            type="number"
+            label="Redução (R$)"
+            value={venda.valorReducao || ''}
             fullWidth
-            value={percentualPisVenda}
-            onChange={(e) => setPercentualPisVenda(parseFloat(e.target.value))}
+            disabled
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor PIS (Venda): {calcularPisVenda().toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de COFINS (Venda)"
-            type="number"
+            label="Simples (%)"
+            name="simples"
+            value={venda.simples}
+            onChange={handleChange}
             fullWidth
-            value={percentualCofinsVenda}
-            onChange={(e) =>
-              setPercentualCofinsVenda(parseFloat(e.target.value))
-            }
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor COFINS (Venda): {calcularCofinsVenda().toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de IRPJ"
-            type="number"
+            label="Simples (R$)"
+            value={venda.valorSimples || ''}
             fullWidth
-            value={percentualIrpj}
-            onChange={(e) => setPercentualIrpj(parseFloat(e.target.value))}
+            disabled
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor IRPJ: {calcularIrpj(precoLiquido).toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de Contribuição Social"
-            type="number"
+            label="PIS (%)"
+            name="pis"
+            value={venda.pis}
+            onChange={handleChange}
             fullWidth
-            value={percentualCSocial}
-            onChange={(e) => setPercentualCSocial(parseFloat(e.target.value))}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Valor Contribuição Social:{" "}
-            {calcularCSocial(precoLiquido).toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de Despesas Fixas"
-            type="number"
+            label="PIS (R$)"
+            value={venda.valorPIS || ''}
             fullWidth
-            value={percentualDespesasFixas}
-            onChange={(e) =>
-              setPercentualDespesasFixas(parseFloat(e.target.value))
-            }
+            disabled
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="body1">
-            Despesas Fixas: {calcularDespesasFixas().toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de Margem"
-            type="number"
+            label="COFINS (%)"
+            name="cofins"
+            value={venda.cofins}
+            onChange={handleChange}
             fullWidth
-            value={percentualMargem}
-            onChange={(e) => setPercentualMargem(parseFloat(e.target.value))}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={3}>
           <TextField
-            label="Percentual de Desconto"
-            type="number"
+            label="COFINS (R$)"
+            value={venda.valorCOFINS || ''}
             fullWidth
-            value={percentualDesconto}
-            onChange={(e) => setPercentualDesconto(parseFloat(e.target.value))}
+            disabled
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="IRPJ (%)"
+            name="irpj"
+            value={venda.irpj}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="IRPJ (R$)"
+            value={venda.valorIRPJ || ''}
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="C.Social (%)"
+            name="cSocial"
+            value={venda.cSocial}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="C.Social (R$)"
+            value={venda.valorCSocial || ''}
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Despesas Fixa (%)"
+            name="dFixa"
+            value={venda.dFixa}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Despesas Fixa (R$)"
+            value={venda.valorDFixa || ''}
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Margem (%)"
+            name="margem"
+            value={venda.margem}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Margem (R$)"
+            value={venda.valorMargem || ''}
+            fullWidth
+            disabled
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Desconto (%)"
+            name="desconto"
+            value={venda.desconto}
+            onChange={handleChange}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <TextField
+            label="Desconto (R$)"
+            value={venda.valorDesconto || ''}
+            fullWidth
+            disabled
           />
         </Grid>
       </Grid>
-    </Paper>
+    </div>
   );
-};
+}
+
+

@@ -13,10 +13,10 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 500,
   bgcolor: "background.paper",
-  border: "1px solid transparent",
   boxShadow: 24,
   p: 4,
   borderRadius: "10px",
+  outline: "none",
 };
 
 export const ModalAlert = () => {
